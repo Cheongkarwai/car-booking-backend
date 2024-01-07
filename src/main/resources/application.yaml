@@ -8,9 +8,9 @@ spring:
       hibernate:
         format_sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/car_booking
-    username: postgres
-    password: root
+    url: jdbc:postgresql://cheong:s7RcdcDrd0sPiNimTpUzUTPbBt2LBVi5@dpg-cmda7a0cmk4c73ajpc90-a/car_booking_4stf
+    username: cheong
+    password: s7RcdcDrd0sPiNimTpUzUTPbBt2LBVi5
   servlet:
     multipart:
       max-file-size: 100MB
