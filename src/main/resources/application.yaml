@@ -1,0 +1,44 @@
+spring:
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/car_booking
+    username: postgres
+    password: root
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+jwt:
+  issuer: cheong
+  key:
+    location:
+      public: classpath:jwt/public.pem
+      private: classpath:jwt/private.pem
+
+logging:
+  level:
+    org:
+      mapstruct: DEBUG
+#      springframework:
+#        web: DEBUG
+#        security: DEBUG
+      hibernate:
+        orm:
+          jdbc:
+            bind: TRACE
+
+aws:
+  s3:
+    access-key: DO00A6V8CB9UQCEN4VV3
+    secret-key: Lct/BE3DSQg025H/NRDdpxa/ROpK5eTnxFUjBShjUaM
+    endpoint: https://car-file-server.sgp1.digitaloceanspaces.com
+    bucket-name: car-file-server
+    region: ap-southeast-1
