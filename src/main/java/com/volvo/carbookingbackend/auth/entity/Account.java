@@ -19,6 +19,7 @@ public class Account {
     @Id
     private String username;
 
+    @Column(columnDefinition = "text")
     private String password;
 
     @ManyToMany(cascade = CascadeType.PERSIST)

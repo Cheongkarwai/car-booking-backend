@@ -17,10 +17,10 @@ public class Token {
     @SequenceGenerator(name = "token_id_generator",sequenceName = "tbl_token_seq",allocationSize = 1)
     private Long id;
 
-    @Column(name="access_token",nullable = false)
+    @Column(name="access_token",nullable = false,columnDefinition = "text")
     private String accessToken;
 
-    @Column(name="refresh_token")
+    @Column(name="refresh_token",columnDefinition = "text")
     private String refreshToken;
 
     @OneToOne(fetch = FetchType.LAZY)
