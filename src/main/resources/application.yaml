@@ -28,9 +28,9 @@ logging:
   level:
     org:
       mapstruct: DEBUG
-#      springframework:
-#        web: DEBUG
-#        security: DEBUG
+      springframework:
+        web: DEBUG
+        security: DEBUG
       hibernate:
         orm:
           jdbc:
