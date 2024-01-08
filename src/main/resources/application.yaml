@@ -9,9 +9,10 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://dpg-cmda7a0cmk4c73ajpc90-a.singapore-postgres.render.com/car_booking_4stf
-    username: cheong
-    password: s7RcdcDrd0sPiNimTpUzUTPbBt2LBVi5
+    url: jdbc:postgresql://localhost:5432/car_booking
+#    url: jdbc:postgresql://dpg-cmda7a0cmk4c73ajpc90-a.singapore-postgres.render.com/car_booking_4stf
+    username: postgres
+    password: root
   servlet:
     multipart:
       max-file-size: 100MB
