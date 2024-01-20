@@ -79,13 +79,13 @@ public class CarController {
         carService.saveUsedCar(usedCarInput,carModelImage);
     }
 
-    @PostMapping(path="/new",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestPart("car") CarInput carInput,@RequestPart("car_model_image") MultipartFile carModelImage,
-                     @RequestPart(value = "exterior_images") MultipartFile [] exteriorImages,
-                     @RequestPart(value = "feature_images") MultipartFile [] featureImages,
-                     @RequestPart(value = "interior_images") MultipartFile [] interiorImages,
-                     @RequestPart(value = "brochure_pdf") MultipartFile  brochure) throws IOException {
+    public void save(@RequestPart("car") CarInput carInput,@RequestPart(value="car_model_image") MultipartFile carModelImage,
+                     @RequestPart(value = "exterior_images",required = false) MultipartFile [] exteriorImages,
+                     @RequestPart(value = "feature_images",required = false) MultipartFile [] featureImages,
+                     @RequestPart(value = "interior_images",required = false) MultipartFile [] interiorImages,
+                     @RequestPart(value = "brochure_pdf",required = false) MultipartFile  brochure) throws IOException {
 
 
        carService.save(carInput,featureImages,exteriorImages,carModelImage,interiorImages,brochure);
@@ -97,5 +97,14 @@ public class CarController {
         carService.deleteById(id);
     }
 
+    @PutMapping(path = "/{id}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable Long id, @RequestPart("car") CarInput carInput,@RequestPart("car_model_image") MultipartFile carModelImage,
+                       @RequestPart(value = "exterior_images") MultipartFile [] exteriorImages,
+                       @RequestPart(value = "feature_images") MultipartFile [] featureImages,
+                       @RequestPart(value = "interior_images") MultipartFile [] interiorImages,
+                       @RequestPart(value = "brochure_pdf") MultipartFile  brochure) throws IOException {
+        carService.update(id,carInput,featureImages,exteriorImages,carModelImage,interiorImages,brochure);
+    }
 
 }

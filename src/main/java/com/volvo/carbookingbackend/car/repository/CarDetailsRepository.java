@@ -12,6 +12,4 @@ public interface CarDetailsRepository extends JpaRepository<CarDetails,Long> {
 
     List<CarDetails> findAllByCarModelAndCondition(String modelName, Condition condition);
 
-    @Query("SELECT DISTINCT cd.condition as title FROM CarDetails cd")
-    List<ConditionProjection> findDistinctCondition();
 }

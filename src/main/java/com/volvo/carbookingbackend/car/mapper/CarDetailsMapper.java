@@ -16,6 +16,8 @@ public interface CarDetailsMapper{
     @ToCarBase
     @Mappings({
             @Mapping(target = "id",source = "id"),
+            @Mapping(target = "modelImage",source = "modelImage"),
+            @Mapping(target = "brochurePdf",source = "brochurePdf"),
     })
     CarDetailsDTO toCarDetailsDTO(Car car);
 

@@ -1,6 +1,7 @@
 package com.volvo.carbookingbackend.car.repository;
 
 import com.volvo.carbookingbackend.car.dto.CarModelProjection;
+import com.volvo.carbookingbackend.car.dto.ConditionProjection;
 import com.volvo.carbookingbackend.car.entity.Car;
 import com.volvo.carbookingbackend.car.entity.Category;
 import com.volvo.carbookingbackend.car.entity.Condition;
@@ -41,4 +42,7 @@ public interface CarRepository extends JpaRepository<Car,Long> , JpaSpecificatio
 
     @Query("SELECT c.id as id, c.model as model,c.startingPrice as price,c.brochurePdf as brochurePdf,c.modelImage as modelImage FROM Car c WHERE c.condition = :condition")
     List<CarModelProjection> findAllCarsModel(@Param("condition") Condition condition);
+
+     @Query("SELECT DISTINCT cd.condition as title FROM Car cd")
+    List<ConditionProjection> findDistinctCondition();
 }

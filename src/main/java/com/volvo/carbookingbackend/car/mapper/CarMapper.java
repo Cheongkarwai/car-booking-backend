@@ -21,10 +21,11 @@ public interface CarMapper {
     @ToCarBase
     @Mappings({
             @Mapping(target = "id",source = "id"),
-            @Mapping(target = "milleage",source = "milleage"),
             @Mapping(target = "modelImage",source = "modelImage")
     })
     CarDTO toCarDTO(Car car);
+
+    void update(CarInput carInput,@MappingTarget Car car);
 
     @AfterMapping
     default void setCar(@MappingTarget Car car){

@@ -49,36 +49,39 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         TokenDTO tokenDTO = tokenService.generateToken(userDetails);
         AccountDTO accountDTO = tokenService.decodeJwt(tokenDTO.getAccessToken());
-        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token",
-                        tokenDTO.getAccessToken())
-                .httpOnly(true).path("/").domain("localhost").maxAge(60*60*24)
-                .secure(true).build();
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token",
-                tokenDTO.getRefreshToken())
-                .httpOnly(true).path("/").domain("localhost").maxAge(60*60*24)
-                .secure(true).build();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
-        headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
-        return new ResponseEntity<>(accountDTO,headers,HttpStatus.OK);
+//        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token",
+//                        tokenDTO.getAccessToken())
+//                .httpOnly(true).path("/").domain("localhost").maxAge(60*60*24)
+//                .secure(true).build();
+//        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token",
+//                tokenDTO.getRefreshToken())
+//                .httpOnly(true).path("/").domain("localhost").maxAge(60*60*24)
+//                .secure(true).build();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+//        headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+        return new ResponseEntity<>(accountDTO,HttpStatus.OK);
     }
 
     @PostMapping("/refresh-token")
-    public HttpEntity<TokenDTO> refreshToken(@CookieValue(name="refresh_token",required = false,defaultValue = "") String refreshToken){
+    public HttpEntity<TokenDTO> refreshToken(
+            @RequestBody String refreshToken
+            //@CookieValue(name="refresh_token",required = false,defaultValue = "") String refreshToken
+            ){
         TokenDTO tokenDTO = tokenService.validateRefreshToken(refreshToken);
-        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token",
-                        tokenDTO.getAccessToken())
-                .httpOnly(true).path("/").domain("localhost").maxAge(60*60*24)
-                .secure(false).build();
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token",
-                        tokenDTO.getRefreshToken())
-                .httpOnly(true).path("/").domain("localhost").maxAge(60*60*24)
-                .secure(false).build();
+//        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token",
+//                        tokenDTO.getAccessToken())
+//                .httpOnly(true).path("/").domain("localhost").maxAge(60*60*24)
+//                .secure(false).build();
+//        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token",
+//                        tokenDTO.getRefreshToken())
+//                .httpOnly(true).path("/").domain("localhost").maxAge(60*60*24)
+//                .secure(false).build();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
-        headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
-        return new ResponseEntity<>(tokenDTO,headers,HttpStatus.OK);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+//        headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+        return new ResponseEntity<>(tokenDTO,HttpStatus.OK);
 
     }
 
@@ -107,18 +110,18 @@ public class AuthController {
 
     @PostMapping("/logout")
     public HttpEntity<Void> logout(HttpServletRequest request){
-        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token",
-                        "")
-                .httpOnly(true).path("/").domain("localhost").maxAge(0)
-                .secure(false).build();
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token",
-                        "")
-                .httpOnly(true).path("/").domain("localhost").maxAge(0)
-                .secure(false).build();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
-        headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
-        return new ResponseEntity<>(null,headers,HttpStatus.OK);
+//        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token",
+//                        "")
+//                .httpOnly(true).path("/").domain("localhost").maxAge(0)
+//                .secure(false).build();
+//        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token",
+//                        "")
+//                .httpOnly(true).path("/").domain("localhost").maxAge(0)
+//                .secure(false).build();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+//        headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+        return new ResponseEntity<>(null,HttpStatus.OK);
     }
 }
 

@@ -116,7 +116,7 @@ public class JwtTokenService implements TokenService{
                 .claim("authorities",userDetails.getAuthorities().stream().parallel().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()))
                 .issuer(issuer)
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plus(1, ChronoUnit.MINUTES)).build();
+                .expiresAt(Instant.now().plus(30, ChronoUnit.MINUTES)).build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader,claimsSet)).getTokenValue();
     }
 
@@ -127,7 +127,7 @@ public class JwtTokenService implements TokenService{
                 .claim("authorities",userDetails.getAuthorities().stream().parallel().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()))
                 .issuer(issuer)
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS)).build();
+                .expiresAt(Instant.now().plus(5, ChronoUnit.HOURS)).build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader,claimsSet)).getTokenValue();
     }
 }

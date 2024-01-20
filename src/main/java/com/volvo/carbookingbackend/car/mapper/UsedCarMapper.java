@@ -14,7 +14,6 @@ public interface UsedCarMapper {
     @ToCarBase
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(source = "milleage",target = "milleage")
     })
-    Car toUsedCar(UsedCarInput carInput);
+    Car toUsedCar(CarInput carInput);
 }

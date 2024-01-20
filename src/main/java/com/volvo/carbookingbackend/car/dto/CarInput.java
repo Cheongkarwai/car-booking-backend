@@ -8,5 +8,6 @@ import java.util.List;
 public record CarInput(String model,String brand,
                        @JsonProperty("starting_price") int startingPrice,
                        Condition condition,
-                       List<FeatureInput> features) {
+                       List<FeatureInput> features,
+                       double milleage) {
 }

@@ -35,4 +35,7 @@ public interface ICarService {
     void deleteById(Long id);
 
     CarDetailsDTO findCarDetailsById(Long id);
+
+    void update(Long id,CarInput carInput, MultipartFile [] featureImages,MultipartFile [] exteriorImages,MultipartFile carModelImage,
+                MultipartFile [] interiorImages,MultipartFile brochure) throws IOException;
 }

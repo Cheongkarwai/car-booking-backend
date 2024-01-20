@@ -1,6 +1,9 @@
 package com.volvo.carbookingbackend.file.service;
 
+import com.amazonaws.s3.model.DeleteObjectOutput;
 import com.volvo.carbookingbackend.configuration.AwsS3Configuration;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class FileService implements  IFileService {
 
     public final S3Client s3Client;
@@ -83,6 +87,18 @@ public class FileService implements  IFileService {
         }
 
         return filePath;
+    }
+
+    public void deleteFile(String path){
+
+        s3Client.listObjects(ListObjectsRequest.builder().build());
+    }
+
+    public void deleteFiles(List<String> paths){
+        for(String path : paths){
+            String key = StringUtils.substringAfter(path,awsS3Configuration.getEndpoint()+"/");
+            s3Client.deleteObject(DeleteObjectRequest.builder().key(key.substring(key.indexOf("/")+1)).bucket(key.split("/")[0]).build());
+        }
     }
 
     private File  toFile(MultipartFile multipartFile) throws IOException {

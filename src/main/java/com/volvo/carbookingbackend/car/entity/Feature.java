@@ -12,7 +12,8 @@ import lombok.*;
 public class Feature {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "tbl_feature_seq_generator")
+    @SequenceGenerator(name = "tbl_feature_seq_generator",allocationSize = 1)
     private Long id;
 
     private String title;

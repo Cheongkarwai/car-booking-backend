@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -119,52 +120,66 @@ public class CarService implements  ICarService{
 
     @Override
     public void saveUsedCar(UsedCarInput usedCarInput,MultipartFile carModelFile) throws IOException {
-        List<String> carModelImagePaths = fileService.uploadFile(usedCarInput.model(),Category.CAR_MODEL.getName(),carModelFile);
-        Car car = usedCarMapper.toUsedCar(usedCarInput);
-        car.setModelImage(carModelImagePaths.get(0));
-        carRepository.save(car);
+//        List<String> carModelImagePaths = fileService.uploadFile(usedCarInput.model(),Category.CAR_MODEL.getName(),carModelFile);
+//        Car car = usedCarMapper.toUsedCar(usedCarInput);
+//        car.setModelImage(carModelImagePaths.get(0));
+//        carRepository.save(car);
     }
     @Override
-    public void save(CarInput carInput, MultipartFile[] featureFiles, MultipartFile[] exteriorFiles, MultipartFile carModelFiles,
+    public void save(CarInput carInput, MultipartFile[] featureFiles, MultipartFile[] exteriorFiles, MultipartFile carModelFile,
                      MultipartFile [] interiorFiles,MultipartFile brochure) throws IOException {
-        List<String> carModelImagePaths = fileService.uploadFile(carInput.model(),Category.CAR_MODEL.getName(),carModelFiles);
-        List<String> exteriorImagePaths = fileService.uploadFile(carInput.model(),Category.EXTERIOR.getName(),exteriorFiles);
-        List<String> featureImagePaths = fileService.uploadFile(carInput.model(),Category.FEATURE.getName(),featureFiles);
-        List<String> interiorImagesPath = fileService.uploadFile(carInput.model(),Category.INTERIOR.getName(),interiorFiles);
-        List<String> brochurePdfPath = fileService.uploadFile(carInput.model(),Category.BROCHURE.getName(),brochure);
 
-        Car car = carMapper.toCar(carInput);
-        List<Image> exteriorImages = imageMapper.toImages(exteriorImagePaths,Category.EXTERIOR);
-        List<Image> featureImages = imageMapper.toImages(featureImagePaths,Category.FEATURE);
-        List<Image> interiorImages = imageMapper.toImages(interiorImagesPath,Category.INTERIOR);
+       switch(carInput.condition()){
+           case USED -> {
+               List<String> carModelImagePaths = fileService.uploadFile(carInput.model(),Category.CAR_MODEL.getName(),carModelFile);
+               Car car = usedCarMapper.toUsedCar(carInput);
+               car.setModelImage(carModelImagePaths.get(0));
+               carRepository.save(car);
+           }
+           case NEW -> {
+               List<String> carModelImagePaths = fileService.uploadFile(carInput.model(),Category.CAR_MODEL.getName(),carModelFile);
+               List<String> brochurePdfPath = fileService.uploadFile(carInput.model(),Category.BROCHURE.getName(),brochure);
+               List<String> exteriorImagePaths = fileService.uploadFile(carInput.model(),Category.EXTERIOR.getName(),exteriorFiles);
+               List<String> featureImagePaths = fileService.uploadFile(carInput.model(),Category.FEATURE.getName(),featureFiles);
+               List<String> interiorImagesPath = fileService.uploadFile(carInput.model(),Category.INTERIOR.getName(),interiorFiles);
 
-        car.addImages(exteriorImages);
-        car.addImages(interiorImages);
+               Car car = carMapper.toCar(carInput);
+               List<Image> exteriorImages = imageMapper.toImages(exteriorImagePaths,Category.EXTERIOR);
+               List<Image> featureImages = imageMapper.toImages(featureImagePaths,Category.FEATURE);
+               List<Image> interiorImages = imageMapper.toImages(interiorImagesPath,Category.INTERIOR);
 
-        int count = 0;
+               car.addImages(exteriorImages);
+               car.addImages(interiorImages);
 
-       System.out.println(featureImages.size());
-       System.out.println(car.getFeatures().size());
-        for(Feature feature : car.getFeatures()){
-            feature.setImage(featureImages.get(count));
-            count++;
-        }
+               int count = 0;
 
-        car.setBrochurePdf(brochurePdfPath.get(0));
-        car.setModelImage(carModelImagePaths.get(0));
+               for(Feature feature : car.getFeatures()){
+                   feature.setImage(featureImages.get(count));
+                   count++;
+               }
 
-        carRepository.save(car);
+               car.setBrochurePdf(brochurePdfPath.get(0));
+               car.setModelImage(carModelImagePaths.get(0));
+
+               carRepository.save(car);
+           }
+       }
     }
 
     @Override
     public List<ConditionProjection> findAllConditions() {
-        return carDetailsRepository.findDistinctCondition();
+        return carRepository.findDistinctCondition();
     }
 
 
     @Override
     public void deleteById(Long id){
-        carRepository.deleteById(id);
+        Car car = carRepository.findById(id).orElseThrow(()->new CarNotFoundException("Car not found"));
+        List<String> filePaths = Arrays.asList(car.getModelImage(),car.getBrochurePdf());
+        fileService.deleteFiles(car.getImages().stream().map(image->image.getPath()).collect(Collectors.toList()));
+        fileService.deleteFiles(filePaths);
+        carRepository.delete(car);
+        //        carRepository.deleteById(id);
     }
 
     @Override
@@ -180,5 +195,37 @@ public class CarService implements  ICarService{
         carDetailsDTO.setInteriorImages(interiorImageDTOs);
 
         return carDetailsDTO;
+    }
+
+    @Override
+    public void update(Long id, CarInput carInput, MultipartFile[] featureFiles, MultipartFile[] exteriorFiles, MultipartFile carModelFiles,
+                       MultipartFile [] interiorFiles,MultipartFile brochure) throws IOException {
+
+        Car car = carRepository.findById(id).orElseThrow(()->new CarNotFoundException("Car not found"));
+
+        List<String> carModelImagePaths = fileService.uploadFile(carInput.model(),Category.CAR_MODEL.getName(),carModelFiles);
+        List<String> brochurePdfPath = fileService.uploadFile(carInput.model(),Category.BROCHURE.getName(),brochure);
+        List<String> exteriorImagePaths = fileService.uploadFile(carInput.model(),Category.EXTERIOR.getName(),exteriorFiles);
+        List<String> featureImagePaths = fileService.uploadFile(carInput.model(),Category.FEATURE.getName(),featureFiles);
+        List<String> interiorImagesPath = fileService.uploadFile(carInput.model(),Category.INTERIOR.getName(),interiorFiles);
+        carMapper.update(carInput,car);
+        List<Image> exteriorImages = imageMapper.toImages(exteriorImagePaths,Category.EXTERIOR);
+        List<Image> featureImages = imageMapper.toImages(featureImagePaths,Category.FEATURE);
+        List<Image> interiorImages = imageMapper.toImages(interiorImagesPath,Category.INTERIOR);
+
+        car.addImages(exteriorImages);
+        car.addImages(interiorImages);
+
+        int count = 0;
+
+        for(Feature feature : car.getFeatures()){
+            feature.setImage(featureImages.get(count));
+            count++;
+        }
+
+        car.setBrochurePdf(brochurePdfPath.get(0));
+        car.setModelImage(carModelImagePaths.get(0));
+
+        carRepository.save(car);
     }
 }

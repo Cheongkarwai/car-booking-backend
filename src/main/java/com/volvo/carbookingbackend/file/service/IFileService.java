@@ -11,5 +11,8 @@ public interface IFileService {
 
     List<String> uploadFile(String bucket, String key, MultipartFile... files) throws IOException;
 
+    void deleteFile(String path);
+
+    void deleteFiles(List<String> paths);
     void download(String url);
 }

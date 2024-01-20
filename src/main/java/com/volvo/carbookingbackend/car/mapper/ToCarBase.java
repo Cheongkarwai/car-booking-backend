@@ -12,5 +12,6 @@ import java.lang.annotation.RetentionPolicy;
 @Mapping(target = "model", source = "model")
 @Mapping(target = "startingPrice",source = "startingPrice")
 @Mapping(target = "condition",source = "condition")
+@Mapping(target = "milleage",source = "milleage")
 public @interface ToCarBase {
 }
